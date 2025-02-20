@@ -5,7 +5,13 @@
  * the number twice.
  */
 export function bookEndList(numbers: number[]): number[] {
-    return numbers;
+    if (numbers.length == 0) {
+        return [];
+    } else if (numbers.length == 1) {
+        return [numbers[0], numbers[0]];
+    } else {
+        return [numbers[0], numbers[numbers.length - 1]];
+    }
 }
 
 /**
@@ -13,15 +19,20 @@ export function bookEndList(numbers: number[]): number[] {
  * number has been tripled (multiplied by 3).
  */
 export function tripleNumbers(numbers: number[]): number[] {
-    return numbers;
+    let tripled: number[] = numbers.map((number: number): number => number * 3);
+    return tripled;
 }
 
 /**
  * Consume an array of strings and convert them to integers. If
  * the number cannot be parsed as an integer, convert it to 0 instead.
  */
-export function stringsToIntegers(numbers: string[]): number[] {
-    return [];
+export function stringsToIntegers(strings: string[]): number[] {
+    let nums: number[] = strings.map((item) => {
+        const parsedValue: number = parseInt(item, 10);
+        return isNaN(parsedValue) ? 0 : parsedValue;
+    });
+    return nums;
 }
 
 /**
@@ -32,7 +43,15 @@ export function stringsToIntegers(numbers: string[]): number[] {
  */
 // Remember, you can write functions as lambdas too! They work exactly the same.
 export const removeDollars = (amounts: string[]): number[] => {
-    return [];
+    let noDollars: number[] = amounts.map((item: string) => {
+        if (item.charAt(0) == "$") {
+            item = item.slice(1);
+        }
+        const parsedValue: number = parseInt(item, 10);
+        return isNaN(parsedValue) ? 0 : parsedValue;
+    });
+
+    return noDollars;
 };
 
 /**
@@ -41,7 +60,17 @@ export const removeDollars = (amounts: string[]): number[] => {
  * in question marks ("?").
  */
 export const shoutIfExclaiming = (messages: string[]): string[] => {
-    return [];
+    let shouted: string[] = messages.map((message: string): string =>
+        message.charAt(message.length - 1) == "!" ?
+            message.toUpperCase()
+        :   message,
+    );
+
+    shouted = shouted.filter(
+        (shout: string): boolean => shout.charAt(shout.length - 1) != "?",
+    );
+
+    return shouted;
 };
 
 /**
@@ -49,7 +78,9 @@ export const shoutIfExclaiming = (messages: string[]): string[] => {
  * 4 letters long.
  */
 export function countShortWords(words: string[]): number {
-    return 0;
+    let shortWords: string[] = words.filter((item: string) => item.length < 4);
+
+    return shortWords.length;
 }
 
 /**
@@ -58,7 +89,9 @@ export function countShortWords(words: string[]): number {
  * then return true.
  */
 export function allRGB(colors: string[]): boolean {
-    return false;
+    return colors.every(
+        (item: string) => item == "red" || item == "green" || item == "blue",
+    );
 }
 
 /**
@@ -69,7 +102,15 @@ export function allRGB(colors: string[]): boolean {
  * And the array [] would become "0=0".
  */
 export function makeMath(addends: number[]): string {
-    return "";
+    if (addends.length == 0) {
+        return "0=0";
+    }
+
+    let sum: number = addends.reduce(
+        (accumulator, currentValue) => accumulator + currentValue,
+        0,
+    );
+    return String(sum) + "=" + addends.join("+");
 }
 
 /**
@@ -82,5 +123,22 @@ export function makeMath(addends: number[]): string {
  * And the array [1, 9, 7] would become [1, 9, 7, 17]
  */
 export function injectPositive(values: number[]): number[] {
-    return [];
+    let firstNegativeIndex = values.findIndex((value: number) => value < 0);
+
+    if (firstNegativeIndex == -1) {
+        let sum: number = values.reduce(
+            (accumulator, currentValue) => accumulator + currentValue,
+            0,
+        );
+        return [...values, sum];
+    } else {
+        const sumBeforeNegative = values
+            .slice(0, firstNegativeIndex)
+            .reduce((acc, num) => acc + num, 0);
+        return [
+            ...values.slice(0, firstNegativeIndex + 1),
+            sumBeforeNegative,
+            ...values.slice(firstNegativeIndex + 1),
+        ];
+    }
 }
